@@ -28,8 +28,8 @@ morgan.token("body", (req) => JSON.stringify(req.body));
 const myFormat =
   ":method :url :status :res[content-length] - :response-time ms :body";
 
-app.use(cors());
-app.use(express.json());
+app.use(cors()); // Middleware function that enables CORS - Cross-Origin Resource Sharing
+app.use(express.json()); // Middleware function that parses incoming requests with JSON payloads
 
 // Utiliser Morgan avec un format personnalisé
 app.use(morgan(myFormat)); // Middleware function that logs the request method, path, status, response time, and body to the console
