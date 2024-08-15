@@ -31,8 +31,10 @@ const myFormat =
 app.use(cors()); // Middleware function that enables CORS - Cross-Origin Resource Sharing
 app.use(express.json()); // Middleware function that parses incoming requests with JSON payloads
 
-// Utiliser Morgan avec un format personnalisé
-app.use(morgan(myFormat)); // Middleware function that logs the request method, path, status, response time, and body to the console
+// Use Morgan with a custom format only if not in test environment
+if (process.env.NODE_ENV !== "test") {
+  app.use(morgan(myFormat)); // Middleware function that logs the request method, path, status, response time, and body to the console
+}
 
 app.use("/api/blogs", blogsRouter);
 
