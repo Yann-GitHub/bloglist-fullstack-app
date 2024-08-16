@@ -7,7 +7,7 @@ const api = supertest(app); // Used to make HTTP requests to the application
 
 const testHelper = require("./test_helper"); // Helper functions for recurring operations
 const Blog = require("../models/blog");
-const { title } = require("node:process");
+// const { title } = require("node:process");
 
 // Before each test, we empty the database and insert the initial blogs
 // This ensures that the db is the same before each test
@@ -34,7 +34,7 @@ describe("when there are initially some blogs saved", () => {
   });
 });
 
-describe("when a new blog is added", async () => {
+describe("when a new blog is added", () => {
   test("a valid blog can be added", async () => {
     const newBlog = {
       title: "Test Blog",
@@ -94,6 +94,43 @@ describe("when a new blog is added", async () => {
     };
 
     await api.post("/api/blogs").send(newBlog).expect(400);
+  });
+});
+
+describe("deletion of a blog", () => {
+  test("succeeds with status code 204 if id is valid", async () => {
+    const blogsAtStart = await testHelper.blogsInDb();
+    const blogToDelete = blogsAtStart[0];
+
+    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+
+    const blogsAtEnd = await testHelper.blogsInDb();
+    assert.strictEqual(blogsAtEnd.length, testHelper.initialBlogs.length - 1);
+
+    const titles = blogsAtEnd.map((r) => r.title);
+    assert(!titles.includes(blogToDelete.title));
+  });
+});
+
+describe("updating a blog", () => {
+  test("succeeds with status code 200 if id is valid", async () => {
+    const blogsAtStart = await testHelper.blogsInDb();
+    const blogToUpdate = blogsAtStart[0];
+
+    const updatedBlog = { ...blogToUpdate, likes: 10 };
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updatedBlog)
+      .expect(200)
+      .expect("Content-Type", /application\/json/);
+
+    const blogsAtEnd = await testHelper.blogsInDb();
+    const updatedBlogAtEnd = blogsAtEnd.find(
+      (blog) => blog.id === blogToUpdate.id
+    );
+
+    assert.strictEqual(updatedBlogAtEnd.likes, 10);
   });
 });
 
