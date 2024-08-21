@@ -5,6 +5,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const blogsRouter = require("./controllers/blogs");
+const usersRouter = require("./controllers/users");
 const morgan = require("morgan");
 
 mongoose.set("strictQuery", false); // Disable the strict query mode - allows to use the find method without a query object
@@ -37,6 +38,7 @@ if (process.env.NODE_ENV !== "test") {
 }
 
 app.use("/api/blogs", blogsRouter);
+app.use("/api/users", usersRouter);
 
 app.use(middleware.unknownEndpoint); // Middleware function that returns an error message if the request is made to a non-existent route
 app.use(middleware.errorHandler); // Middleware function that handles errors in a centralized way
