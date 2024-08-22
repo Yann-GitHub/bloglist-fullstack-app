@@ -1,4 +1,5 @@
 const Blog = require("../models/blog");
+const User = require("../models/user");
 const blogsRouter = require("express").Router(); // Create an Express router
 
 blogsRouter.get("/test", async (request, response, next) => {
@@ -11,7 +12,10 @@ blogsRouter.get("/test", async (request, response, next) => {
 
 blogsRouter.get("/", async (request, response, next) => {
   try {
-    const blogs = await Blog.find({});
+    const blogs = await Blog.find({}).populate("user", {
+      username: 1,
+      name: 1,
+    });
     response.json(blogs);
   } catch (exception) {
     next(exception);
@@ -21,14 +25,25 @@ blogsRouter.get("/", async (request, response, next) => {
 blogsRouter.post("/", async (request, response, next) => {
   const body = request.body;
 
+  const users = await User.find({});
+  const userAsTest = users[0];
+  // console.log(userAsTest);
+  // console.log("eererererrrererererererrere");
+
   const blog = new Blog({
     author: body.author,
     title: body.title,
     url: body.url,
     likes: body.likes || 0,
+    user: userAsTest._id,
   });
+
   try {
     const savedBlog = await blog.save();
+
+    // Ajoutez l'ID du blog à la liste des blogs de l'utilisateur
+    userAsTest.blogs = userAsTest.blogs.concat(savedBlog._id);
+    await userAsTest.save();
     response.status(201).json(savedBlog);
   } catch (exception) {
     next(exception);

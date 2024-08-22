@@ -11,14 +11,13 @@ const userSchema = new mongoose.Schema({
   name: String,
   passwordHash: {
     type: String,
-    required: true,
   },
-  //   notes: [
-  //     {
-  //       type: mongoose.Schema.Types.ObjectId,
-  //       ref: "Note",
-  //     },
-  //   ],
+  blogs: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Blog",
+    },
+  ],
 });
 
 userSchema.set("toJSON", {
