@@ -1,5 +1,6 @@
 // Helper module - Utility functions for testing
 const Blog = require("../models/blog");
+const User = require("../models/user");
 
 // Initial database state
 const initialBlogs = [
@@ -93,10 +94,16 @@ const nonExistingId = async () => {
   return blog._id.toString();
 };
 
-// Get all notes in the db
+// Get all blogs in the db
 const blogsInDb = async () => {
   const blogs = await Blog.find({});
   return blogs.map((blog) => blog.toJSON());
+};
+
+// Get all users in the db
+const usersInDb = async () => {
+  const users = await User.find({});
+  return users.map((u) => u.toJSON());
 };
 
 module.exports = {
@@ -105,4 +112,5 @@ module.exports = {
   blogs,
   nonExistingId,
   blogsInDb,
+  usersInDb,
 };

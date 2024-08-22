@@ -7,7 +7,6 @@ const api = supertest(app); // Used to make HTTP requests to the application
 
 const testHelper = require("./test_helper"); // Helper functions for recurring operations
 const Blog = require("../models/blog");
-// const { title } = require("node:process");
 
 // Before each test, we empty the database and insert the initial blogs
 // This ensures that the db is the same before each test
