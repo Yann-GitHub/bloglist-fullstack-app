@@ -27,8 +27,6 @@ blogsRouter.post("/", async (request, response, next) => {
 
   const users = await User.find({});
   const userAsTest = users[0];
-  // console.log(userAsTest);
-  // console.log("eererererrrererererererrere");
 
   const blog = new Blog({
     author: body.author,
