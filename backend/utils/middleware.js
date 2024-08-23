@@ -1,5 +1,7 @@
 // Used for custom middleware functions
 const logger = require("./logger");
+const jwt = require("jsonwebtoken");
+const { getTokenFromRequest } = require("./token_helper");
 
 // Middleware executed for every incoming request - logs the request method, path, and body to the console - alternative to morgan package
 // Not used in this project - using morgan package instead
@@ -36,8 +38,28 @@ const errorHandler = (error, request, response, next) => {
   next(error);
 };
 
+const authenticateToken = (request, response, next) => {
+  const token = getTokenFromRequest(request);
+  if (!token) {
+    return response.status(401).json({ error: "token missing" });
+  }
+
+  try {
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+    if (!decodedToken.id) {
+      return response.status(401).json({ error: "token invalid" });
+    }
+    request.user = decodedToken;
+    next();
+  } catch (error) {
+    console.error("Token verification error:", error);
+    return response.status(401).json({ error: "token invalid" });
+  }
+};
+
 module.exports = {
   requestLogger,
   unknownEndpoint,
   errorHandler,
+  authenticateToken,
 };

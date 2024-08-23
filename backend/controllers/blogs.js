@@ -1,6 +1,7 @@
 const Blog = require("../models/blog");
 const User = require("../models/user");
-const blogsRouter = require("express").Router(); // Create an Express router
+const blogsRouter = require("express").Router();
+const { authenticateToken } = require("../utils/middleware");
 
 blogsRouter.get("/test", async (request, response, next) => {
   try {
@@ -22,26 +23,27 @@ blogsRouter.get("/", async (request, response, next) => {
   }
 });
 
+// Use the verifyToken middleware for all routes below this line
+// if the token is valid, the middleware will extract the user object from the token and add it to the request object
+blogsRouter.use(authenticateToken);
+
 blogsRouter.post("/", async (request, response, next) => {
   const body = request.body;
+  const user = await User.findById(request.user.id); // Find the user who created the blog
 
-  const users = await User.find({});
-  const userAsTest = users[0];
-
+  // Create a new blog object
   const blog = new Blog({
     author: body.author,
     title: body.title,
     url: body.url,
     likes: body.likes || 0,
-    user: userAsTest._id,
+    user: user._id,
   });
 
   try {
-    const savedBlog = await blog.save();
-
-    // Ajoutez l'ID du blog à la liste des blogs de l'utilisateur
-    userAsTest.blogs = userAsTest.blogs.concat(savedBlog._id);
-    await userAsTest.save();
+    const savedBlog = await blog.save(); // Save the blog to the database
+    user.blogs = user.blogs.concat(savedBlog._id); // Add the blog's ID to the user's list of blogs
+    await user.save(); // Save the user to the database
     response.status(201).json(savedBlog);
   } catch (exception) {
     next(exception);
