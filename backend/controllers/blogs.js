@@ -29,7 +29,8 @@ blogsRouter.use(authenticateToken);
 
 blogsRouter.post("/", async (request, response, next) => {
   const body = request.body;
-  const user = await User.findById(request.user.id); // Find the user who created the blog
+  // const user = await User.findById(request.user.id); // Find the user who created the blog
+  const user = request.user;
 
   // Create a new blog object
   const blog = new Blog({
@@ -52,10 +53,28 @@ blogsRouter.post("/", async (request, response, next) => {
 
 blogsRouter.delete("/:id", async (request, response, next) => {
   try {
+    // Find the user who created the blog and populate the blogs array
+    const user = await User.findById(request.user.id);
+    if (!user) {
+      return response.status(401).json({ error: "user not found" });
+    }
+
+    // Find the blog to be deleted
     const blog = await Blog.findById(request.params.id);
     if (!blog) {
       return response.status(404).send({ error: "Blog not found" });
     }
+
+    // Check if the user is authorized to delete the blog - object IDs are compared as strings
+    if (user._id.toString() !== blog.user.toString()) {
+      return response.status(401).send({ error: "Unauthorized" });
+    }
+
+    // Remove the blog ID from the user's blogs array
+    user.blogs = user.blogs.filter(
+      (blogId) => blogId.toString() !== request.params.id
+    );
+    await user.save();
 
     await Blog.findByIdAndDelete(request.params.id);
     response.status(204).end();
@@ -65,6 +84,7 @@ blogsRouter.delete("/:id", async (request, response, next) => {
   }
 });
 
+// TODO: Implement the PUT route for updating a blog - Token verification is already implemented
 blogsRouter.put("/:id", async (request, response, next) => {
   const body = request.body;
 

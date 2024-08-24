@@ -16,8 +16,7 @@ loginRouter.post("/", async (request, response) => {
 
   // Find the user with the username from the request
   const user = await User.findOne({ username: body.username });
-  console.log(user);
-  console.log("eeeedffdfdfdfdfdfdfdfffdf");
+  // console.log(user);
 
   // Check if the password is correct
   const passwordCorrect =

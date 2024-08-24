@@ -38,6 +38,7 @@ const errorHandler = (error, request, response, next) => {
   next(error);
 };
 
+// Middleware function that verifies the token in the request header, extracts the user object from the token, and adds it to the request object
 const authenticateToken = (request, response, next) => {
   const token = getTokenFromRequest(request);
   if (!token) {
