@@ -29,8 +29,10 @@ blogsRouter.use(authenticateToken);
 
 blogsRouter.post("/", async (request, response, next) => {
   const body = request.body;
-  // const user = await User.findById(request.user.id); // Find the user who created the blog
-  const user = request.user;
+  const user = await User.findById(request.user.id); // Find the user who created the blog
+
+  // Vérifiez que l'utilisateur est correctement récupéré
+  console.log("User:", user);
 
   // Create a new blog object
   const blog = new Blog({
@@ -43,18 +45,20 @@ blogsRouter.post("/", async (request, response, next) => {
 
   try {
     const savedBlog = await blog.save(); // Save the blog to the database
+    console.log("Saved Blog:", savedBlog);
+
     user.blogs = user.blogs.concat(savedBlog._id); // Add the blog's ID to the user's list of blogs
     await user.save(); // Save the user to the database
     response.status(201).json(savedBlog);
   } catch (exception) {
+    console.error("Error saving blog:", exception);
     next(exception);
   }
 });
 
 blogsRouter.delete("/:id", async (request, response, next) => {
   try {
-    // Find the user who created the blog and populate the blogs array
-    const user = await User.findById(request.user.id);
+    const user = await User.findById(request.user.id); // Find the user who created the blog
     if (!user) {
       return response.status(401).json({ error: "user not found" });
     }
@@ -88,7 +92,7 @@ blogsRouter.delete("/:id", async (request, response, next) => {
 blogsRouter.put("/:id", async (request, response, next) => {
   const body = request.body;
 
-  const blog = {
+  const updatedBlogData = {
     title: body.title,
     author: body.author,
     url: body.url,
@@ -96,11 +100,43 @@ blogsRouter.put("/:id", async (request, response, next) => {
   };
 
   try {
-    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {
-      new: true,
-    });
-    response.json(updatedBlog);
+    // Find the user who created the blog
+    const user = await User.findById(request.user.id);
+    if (!user) {
+      return response.status(401).json({ error: "user not found" });
+    }
+
+    // Find the blog to be updated
+    const blog = await Blog.findById(request.params.id);
+    if (!blog) {
+      return response.status(404).send({ error: "Blog not found" });
+    }
+
+    // Check if the user is authorized to update the blog - object IDs are compared as strings
+    if (user._id.toString() !== blog.user.toString()) {
+      return response.status(401).send({ error: "Unauthorized" });
+    }
+
+    // Update the blog in the database
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      request.params.id,
+      {
+        $set: updatedBlogData,
+        $inc: { __v: 1 }, // Increment the version number
+      },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    if (updatedBlog) {
+      response.json(updatedBlog);
+    } else {
+      response.status(404).end();
+    }
   } catch (exception) {
+    console.error(exception); // Log the exception for debugging
     next(exception);
   }
 });

@@ -106,6 +106,21 @@ const usersInDb = async () => {
   return users.map((u) => u.toJSON());
 };
 
+const existingToken = async () => {
+  const user = {
+    username: "root",
+    password: "sekret",
+  };
+
+  const response = await api
+    .post("/api/login")
+    .send(user)
+    .expect(200)
+    .expect("Content-Type", /application\/json/);
+
+  return response.body.token;
+};
+
 module.exports = {
   initialBlogs,
   listWithOneBlog,
@@ -113,4 +128,5 @@ module.exports = {
   nonExistingId,
   blogsInDb,
   usersInDb,
+  existingToken,
 };
