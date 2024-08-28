@@ -4,14 +4,14 @@ This is a simple bloglist application built using Node.js and Express. It allows
 
 ## Installation
 
-1. Clone the repository: `git clone https://github.com/your-username/bloglist-app.git`
+1. Clone the repository: `git clone git@github.com:Yann-GitHub/bloglist-fullstack-app.git`
 2. Navigate to the project directory: `cd bloglist-app`
-3. Install dependencies: `npm install`
+3. Install dependencies for both backend and frontend: `npm install`
 
 ## Usage
 
 1. Start the server: `npm start`
-2. Open your browser and go to `http://localhost:3000`
+2. Open your browser and go to `http://localhost:5173`
 3. You can now create, read, update, and delete blog posts using the provided user interface.
 
 ## Technologies Used
@@ -21,10 +21,6 @@ This is a simple bloglist application built using Node.js and Express. It allows
 - MongoDB
 - HTML
 - CSS
-
-## Contributing
-
-Contributions are welcome! If you find any issues or have suggestions for improvements, please create a new issue or submit a pull request.
 
 ## License
 
