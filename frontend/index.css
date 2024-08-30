@@ -1,0 +1,23 @@
+.logout {
+  display: inline-flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.toast {
+  color: green;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 50px;
+  border: 2px solid green;
+  border-radius: 10px;
+}
+
+.errorNotification {
+  border: 2px solid red;
+  color: red;
+}
