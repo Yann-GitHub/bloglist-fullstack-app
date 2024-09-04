@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Blog from "./components/Blog";
 import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
@@ -40,6 +40,8 @@ const App = () => {
     }, 4000);
   };
 
+  const blogFormRef = useRef();
+
   return (
     <div>
       <Notification message={notificationMessage} />
@@ -56,11 +58,12 @@ const App = () => {
             <span>{`👨🏻 ${user.username} logged in`}</span>
             <button onClick={handleLogout}>logout</button>
           </div>
-          <Togglable buttonLabel={"Create blog"}>
+          <Togglable buttonLabel={"New blog"} ref={blogFormRef}>
             <BlogForm
               setNotificationMessage={setNotificationMessage}
               setBlogs={setBlogs}
               blogs={blogs}
+              blogFormRef={blogFormRef}
             />
           </Togglable>
 

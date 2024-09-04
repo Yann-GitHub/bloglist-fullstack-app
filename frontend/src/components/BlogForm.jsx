@@ -1,7 +1,7 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
 
-const BlogForm = ({ setBlogs, blogs, setNotificationMessage }) => {
+const BlogForm = ({ setBlogs, blogs, setNotificationMessage, blogFormRef }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
@@ -27,6 +27,7 @@ const BlogForm = ({ setBlogs, blogs, setNotificationMessage }) => {
       setTimeout(() => {
         setNotificationMessage(null);
       }, 4000);
+      blogFormRef.current.toggleVisibility();
     } catch (exception) {
       console.log(exception);
       setNotificationMessage({
@@ -71,7 +72,6 @@ const BlogForm = ({ setBlogs, blogs, setNotificationMessage }) => {
         </div>
         <button type="submit">Save blog</button>
       </form>
-      <br />
     </>
   );
 };

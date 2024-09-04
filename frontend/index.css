@@ -29,3 +29,25 @@
   border: 2px solid red;
   color: red;
 }
+
+.blog {
+  border: 1px solid black;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #f0f0f0;
+}
+
+.blog__title {
+}
+
+.blog__info {
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  flex-direction: column;
+}
+
+.hidden {
+  display: none;
+}

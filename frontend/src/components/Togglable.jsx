@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, forwardRef, useImperativeHandle } from "react";
 
-const Togglable = (props) => {
+const Togglable = forwardRef((props, ref) => {
   const [visible, setVisible] = useState(true);
 
   // Conditional styling
@@ -9,6 +9,11 @@ const Togglable = (props) => {
 
   // Toggle visibility
   const toggleVisibility = () => setVisible(!visible);
+
+  // Expose the toggleVisibility function to the parent component
+  useImperativeHandle(ref, () => {
+    return { toggleVisibility };
+  });
 
   return (
     <div>
@@ -19,8 +24,9 @@ const Togglable = (props) => {
         {props.children}
         <button onClick={toggleVisibility}>Close</button>
       </div>
+      <br />
     </div>
   );
-};
+});
 
 export default Togglable;
