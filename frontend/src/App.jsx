@@ -3,6 +3,7 @@ import Blog from "./components/Blog";
 import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
 import BlogForm from "./components/BlogForm";
+import Togglable from "./components/Togglable";
 
 import blogService from "./services/blogs";
 
@@ -31,7 +32,7 @@ const App = () => {
     window.localStorage.clear();
     blogService.setToken(null);
     setNotificationMessage({
-      message: "Log out, Bye 👋🏼",
+      message: "Logged out. Goodbye!👋🏼",
       type: "success",
     });
     setTimeout(() => {
@@ -55,11 +56,13 @@ const App = () => {
             <span>{`👨🏻 ${user.username} logged in`}</span>
             <button onClick={handleLogout}>logout</button>
           </div>
-          <BlogForm
-            setNotificationMessage={setNotificationMessage}
-            setBlogs={setBlogs}
-            blogs={blogs}
-          />
+          <Togglable buttonLabel={"Create blog"}>
+            <BlogForm
+              setNotificationMessage={setNotificationMessage}
+              setBlogs={setBlogs}
+              blogs={blogs}
+            />
+          </Togglable>
 
           {blogs.map((blog) => (
             <Blog key={blog.id} blog={blog} />

@@ -21,7 +21,7 @@ const LoginForm = ({ setNotificationMessage, setUser }) => {
       setUsername("");
       setPassword("");
       setNotificationMessage({
-        message: "You are loggin 🎉",
+        message: "You are logged in 🎉",
         type: "success",
       });
       setTimeout(() => {
@@ -30,12 +30,14 @@ const LoginForm = ({ setNotificationMessage, setUser }) => {
     } catch (error) {
       console.log(error);
       setNotificationMessage({
-        message: "⛔️ Wrong credentials",
+        message: "⛔️ Wrong credentials, try again !!",
         type: "error",
       });
       setTimeout(() => {
         setNotificationMessage(null);
       }, 4000);
+      setUsername("");
+      setPassword("");
     }
   };
 
