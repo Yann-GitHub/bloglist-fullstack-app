@@ -1,6 +1,7 @@
 import { useState } from "react";
 import loginService from "../services/login";
 import blogService from "../services/blogs";
+import PropTypes from "prop-types";
 
 const LoginForm = ({ setNotificationMessage, setUser }) => {
   const [password, setPassword] = useState("");
@@ -68,6 +69,11 @@ const LoginForm = ({ setNotificationMessage, setUser }) => {
       <br />
     </>
   );
+};
+
+LoginForm.propTypes = {
+  setNotificationMessage: PropTypes.func.isRequired,
+  setUser: PropTypes.func.isRequired,
 };
 
 export default LoginForm;
