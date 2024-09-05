@@ -58,7 +58,7 @@ const App = () => {
             <span>{`👨🏻 ${user.username} logged in`}</span>
             <button onClick={handleLogout}>logout</button>
           </div>
-          <Togglable buttonLabel={"New blog"} ref={blogFormRef}>
+          <Togglable buttonLabel={"Create new blog"} ref={blogFormRef}>
             <BlogForm
               setNotificationMessage={setNotificationMessage}
               setBlogs={setBlogs}

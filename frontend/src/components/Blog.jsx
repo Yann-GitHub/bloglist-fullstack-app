@@ -8,6 +8,31 @@ const Blog = ({ blog, blogs, setBlogs, setNotificationMessage }) => {
   const toggleVisibility = () => setVisible(!visible);
   const optionalClass = visible ? "" : "hidden";
 
+  const handleDelete = async () => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      try {
+        await blogService.deleteBlog(blog.id);
+        setBlogs(blogs.filter((b) => b.id !== blog.id));
+        setNotificationMessage({
+          message: "Blog deleted successfully 🗑",
+          type: "success",
+        });
+        setTimeout(() => {
+          setNotificationMessage(null);
+        }, 4000);
+      } catch (error) {
+        console.log(error);
+        setNotificationMessage({
+          message: `Failed to delete blog: ${error.response.data.error}`,
+          type: "error",
+        });
+        setTimeout(() => {
+          setNotificationMessage(null);
+        }, 4000);
+      }
+    }
+  };
+
   const handleLike = async () => {
     if (isLoading) return; // Prevent multiple clicks while the request is in progress
 
@@ -37,7 +62,7 @@ const Blog = ({ blog, blogs, setBlogs, setNotificationMessage }) => {
     <div className="blog">
       <div className="blog__title">
         {blog.title}{" "}
-        <button onClick={toggleVisibility}>{visible ? "close" : "view"}</button>
+        <button onClick={toggleVisibility}>{visible ? "hide" : "view"}</button>
       </div>
       <div className={`blog__info ${optionalClass}`}>
         <span>{blog.author}</span>
@@ -49,6 +74,7 @@ const Blog = ({ blog, blogs, setBlogs, setNotificationMessage }) => {
         <span>
           {blog.likes} likes <button onClick={handleLike}>like</button>
         </span>
+        <button onClick={handleDelete}>Delete</button>
       </div>
     </div>
   );

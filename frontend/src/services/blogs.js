@@ -57,4 +57,33 @@ const updateBlog = async (id, updatedBlogData) => {
   }
 };
 
-export default { getAll, setToken, createBlog, updateBlog, setToken };
+const deleteBlog = async (id) => {
+  if (!token) {
+    throw new Error("No authorization token provided");
+  }
+
+  const config = {
+    headers: {
+      Authorization: token,
+    },
+  };
+
+  try {
+    await axios.delete(`${baseUrl}/${id}`, config);
+  } catch (error) {
+    console.error(
+      "Error deleting blog:",
+      error.response ? error.response.data : error.message
+    );
+    throw error; // Propager l'erreur pour que l'appelant puisse la gérer
+  }
+};
+
+export default {
+  getAll,
+  setToken,
+  createBlog,
+  updateBlog,
+  deleteBlog,
+  setToken,
+};

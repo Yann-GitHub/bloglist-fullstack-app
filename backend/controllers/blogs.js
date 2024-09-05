@@ -88,7 +88,6 @@ blogsRouter.delete("/:id", async (request, response, next) => {
   }
 });
 
-// TODO: Implement the PUT route for updating a blog - Token verification is already implemented
 blogsRouter.put("/:id", async (request, response, next) => {
   const body = request.body;
 
@@ -98,13 +97,6 @@ blogsRouter.put("/:id", async (request, response, next) => {
   if (body.author !== undefined) updatedBlogData.author = body.author;
   if (body.url !== undefined) updatedBlogData.url = body.url;
   if (body.likes !== undefined) updatedBlogData.likes = body.likes;
-
-  // const updatedBlogData = {
-  //   title: body.title,
-  //   author: body.author,
-  //   url: body.url,
-  //   likes: body.likes,
-  // };
 
   try {
     // Find the user who created the blog
