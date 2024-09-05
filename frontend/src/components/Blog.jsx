@@ -22,7 +22,7 @@ const Blog = ({ blog, blogs, setBlogs, setNotificationMessage }) => {
     } catch (error) {
       console.log(error);
       setNotificationMessage({
-        message: `Failed to update likes: ${error.message}`,
+        message: `Failed to update likes: ${error.response.data.error}`,
         type: "error",
       });
       setTimeout(() => {
@@ -41,7 +41,11 @@ const Blog = ({ blog, blogs, setBlogs, setNotificationMessage }) => {
       </div>
       <div className={`blog__info ${optionalClass}`}>
         <span>{blog.author}</span>
-        <span>{blog.url}</span>
+        <span>
+          <a href={blog.url} target="_blank" rel="noopener noreferrer">
+            {blog.url}
+          </a>
+        </span>
         <span>
           {blog.likes} likes <button onClick={handleLike}>like</button>
         </span>

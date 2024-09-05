@@ -67,15 +67,18 @@ const App = () => {
             />
           </Togglable>
 
-          {blogs.map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              blogs={blogs}
-              setBlogs={setBlogs}
-              setNotificationMessage={setNotificationMessage}
-            />
-          ))}
+          {blogs
+            .slice() // Crée une copie des blogs pour éviter de muter l'état original
+            .sort((a, b) => b.likes - a.likes) // Trie les blogs par ordre décroissant de likes
+            .map((blog) => (
+              <Blog
+                key={blog.id}
+                blog={blog}
+                blogs={blogs}
+                setBlogs={setBlogs}
+                setNotificationMessage={setNotificationMessage}
+              />
+            ))}
         </div>
       )}
     </div>
