@@ -31,7 +31,7 @@ blogsRouter.post("/", async (request, response, next) => {
   const body = request.body;
   const user = await User.findById(request.user.id); // Find the user who created the blog
 
-  // Vérifiez que l'utilisateur est correctement récupéré
+  // Check if the user exists in the database
   console.log("User:", user);
 
   // Create a new blog object
@@ -92,12 +92,19 @@ blogsRouter.delete("/:id", async (request, response, next) => {
 blogsRouter.put("/:id", async (request, response, next) => {
   const body = request.body;
 
-  const updatedBlogData = {
-    title: body.title,
-    author: body.author,
-    url: body.url,
-    likes: body.likes,
-  };
+  // Create an object with the updated blog data - only include the fields that are defined in the request body
+  const updatedBlogData = {};
+  if (body.title !== undefined) updatedBlogData.title = body.title;
+  if (body.author !== undefined) updatedBlogData.author = body.author;
+  if (body.url !== undefined) updatedBlogData.url = body.url;
+  if (body.likes !== undefined) updatedBlogData.likes = body.likes;
+
+  // const updatedBlogData = {
+  //   title: body.title,
+  //   author: body.author,
+  //   url: body.url,
+  //   likes: body.likes,
+  // };
 
   try {
     // Find the user who created the blog
@@ -121,7 +128,7 @@ blogsRouter.put("/:id", async (request, response, next) => {
     const updatedBlog = await Blog.findByIdAndUpdate(
       request.params.id,
       {
-        $set: updatedBlogData,
+        $set: updatedBlogData, // Update the blog data
         $inc: { __v: 1 }, // Increment the version number
       },
       {

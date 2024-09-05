@@ -1,10 +1,37 @@
 import { useState } from "react";
+import blogService from "../services/blogs";
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, blogs, setBlogs, setNotificationMessage }) => {
   const [visible, setVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggleVisibility = () => setVisible(!visible);
   const optionalClass = visible ? "" : "hidden";
+
+  const handleLike = async () => {
+    if (isLoading) return; // Prevent multiple clicks while the request is in progress
+
+    setIsLoading(true);
+    try {
+      const updatedBlog = await blogService.updateBlog(blog.id, {
+        ...blog,
+        likes: blog.likes + 1,
+      });
+      setBlogs(blogs.map((b) => (b.id !== blog.id ? b : updatedBlog)));
+      console.log("Updated Blog:", updatedBlog);
+    } catch (error) {
+      console.log(error);
+      setNotificationMessage({
+        message: `Failed to update likes: ${error.message}`,
+        type: "error",
+      });
+      setTimeout(() => {
+        setNotificationMessage(null);
+      }, 4000);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="blog">
@@ -16,7 +43,7 @@ const Blog = ({ blog }) => {
         <span>{blog.author}</span>
         <span>{blog.url}</span>
         <span>
-          {blog.likes} likes <button>like</button>
+          {blog.likes} likes <button onClick={handleLike}>like</button>
         </span>
       </div>
     </div>

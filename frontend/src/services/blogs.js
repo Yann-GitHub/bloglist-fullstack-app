@@ -21,8 +21,6 @@ const createBlog = async (newBlog) => {
     },
   };
 
-  console.log("kjdfkjdfkjdfkjdfkjdfkjdfkj");
-  console.log(token);
   try {
     const response = await axios.post(baseUrl, newBlog, config);
     return response.data;
@@ -35,4 +33,28 @@ const createBlog = async (newBlog) => {
   }
 };
 
-export default { getAll, setToken, createBlog, setToken };
+const updateBlog = async (id, updatedBlogData) => {
+  const config = {
+    headers: {
+      Authorization: token,
+      "Content-Type": "application/json",
+    },
+  };
+
+  try {
+    const response = await axios.put(
+      `${baseUrl}/${id}`,
+      updatedBlogData,
+      config
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error updating blog:",
+      error.response ? error.response.data : error.message
+    );
+    throw error; // Propager l'erreur pour que l'appelant puisse la gérer
+  }
+};
+
+export default { getAll, setToken, createBlog, updateBlog, setToken };
